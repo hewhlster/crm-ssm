@@ -1,0 +1,213 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>客户管理-查询</title>
+    <style>
+    a
+    {
+      margin:2px;
+    }
+    </style>
+    <script src="../resource/js/bootstrap-LeadInto.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row clearfix" style="margin-top: 3%; margin-bottom: 2%;">
+            <div class="col-md-12 column ">
+                <div class="col-sm-2 column ">
+                    <a id="addA" href="clientManage-add.aspx">
+                        <button data-urlname="新增" type="button" class="btn btn-default btn-block btn-primary newUrlBtn">
+                            新增</button></a>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+        <form id="clientForm">
+            <div class="col-sm-12 column">
+                <div class="row clearfix">
+                    <div class="col-sm-3 column form-horizontal">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-6 control-label">
+                                客户名称</label>
+                            <div class="col-sm-6" style="margin: 0; padding: 0;">
+                                <input name="cstName" type="text" style="margin: 0; padding: 0;" class="form-control" id="inputEmail3" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 column form-horizontal">
+                        <div class="form-group ">
+                            <label for="inputEmail3" class="col-sm-6 control-label">
+                                负责经理</label>
+                            <div class="col-sm-6" style="margin: 0; padding: 0;">
+                                <input name="cstManage" type="text" style="margin: 0; padding: 0;" class="form-control" id="inputEmail3" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 column form-horizontal">
+                        <div class="form-group ">
+                            <label for="inputEmail3" class="col-sm-6 control-label">
+                                状态</label>
+                            <div class="col-sm-4" style="margin: 0; padding: 0;">
+                                <select name="cststatus" class="form-control" style="margin: 0; padding: 0;">
+                                     <option value="">—</option>
+                                    <option>正常</option>
+                                    <option>流失</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 column form-horizontal col-sm-offset-1">
+                        <button   type="button" class="btn btn-default btn-block btn-primary selectBtn submitForm" onclick="submitFrom()">查询</button>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                编号
+                            </th>
+                            <th>
+                                客户名称
+                            </th>
+                            <th>
+                                负责经理
+                            </th>
+                            <th>
+                                联系电话
+                            </th>
+                            <th>
+                                状态
+                            </th>
+                            <th>
+                                操作
+                            </th>
+                        </tr>
+                    </thead><tbody id="tableBody"></tbody>
+                    
+                </table>
+                <div class="row clearfix">
+                    <div class="col-md-4 column">
+                    </div>
+                    <div class="col-md-5 column">
+                        <ul class="pagination">
+                            
+                        </ul>
+                    </div>
+                    <div class="col-md-3 column">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../resource/js/pageList.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../resource/js/checkSelect.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript">
+     
+            window.onload = function () {
+                getInfo();
+            }
+
+
+            function submitFrom() {
+                $('form').bootstrapValidator('validate');
+                var formState = $('form').data('bootstrapValidator').isValid()
+                if (formState) {
+                    $.ajax({
+                        cache: true,
+                        type: "POST",
+                        url: "../../Control/clientManageControl/clientSelectSelectHandler.ashx",
+                        data: $("#clientForm").serialize(),
+                        async: false,
+                        error: function (request) {
+                            alert("服务器暂时无法响应，请稍后...");
+                        },
+                        success: function (data) {
+                            json = data;
+                            pageList(json, ListCount, "1");
+                            // viewTable(data);
+                        }
+                    });
+                } 
+            }
+            function viewTable(data, pageListButton) {
+                var obj = JSON.parse(data);
+                $("#tableBody").html(""); //清空table
+                for (var i = 0; i < obj.length; i++) {
+                    var strClass = "class=";
+                    var nameClass;
+                    switch (i % 5) {
+                        case 0:
+                            nameClass = "";
+                            break;
+                        case 1:
+                            nameClass = "active";
+                            break;
+                        case 2:
+                            nameClass = "success";
+                            break;
+                        case 3:
+                            nameClass = "warning";
+                            break;
+                        case 4:
+                            nameClass = "danger";
+                            break;
+                    }
+                    strClass += "\"" + nameClass + "\"";
+                    var url5 = "?id=" + obj[i].CstNo + "&&name=" + obj[i].CstName + "&&manager=" + obj[i].CstManager + "&&region=" + obj[i].CstRegion + "&&tel=" + obj[i].CstTel + "&&addr=" + obj[i].CstAddr + "&&web=" + obj[i].CstWeb + "&&remark=" + obj[i].CstRemark + "&&credit=" + obj[i].CstCredit + "&&satisfy=" + obj[i].CstSatisfy + "&&level=" + obj[i].CstLevel ;
+                    var url1 ="clientManage-contact.aspx"+url5;
+                    var url2 ="clientManage-communication.aspx"+url5;
+                    var url3 = "clientManage-history.aspx" + url5;
+                    var url4 = "clientManage-edit.aspx" + url5;
+                   var aUrl= "<a data-urlname='客户联系人信息' class='newUrlBtn contactBtn' href='" +
+                    url1 + "'><span class='glyphicon glyphicon-earphone ' data-toggle='tooltip' data-placement='top' title='客户联系人信息' style='font-size: 15px' aria-hidden='true'></span></a><a data-urlname='交往记录'href='" +
+                    url2 + "' class='newUrlBtn communicationBtn'> <span class='glyphicon glyphicon-search ' data-toggle='tooltip' data-placement='top' title='交往记录' style='font-size: 15px' aria-hidden='true'></span></a><a class='buttin1' data-url='" + 
+                    url4 + "'><span class='glyphicon glyphicon-pencil' data-toggle='tooltip'  data-placement='top' title='编辑' style='font-size: 15px' aria-hidden='true'></span></a><a href='" +
+                    url3 + "' data-urlname='历史订单' class='newUrlBtn historyBtn'><span class='glyphicon glyphicon-list-alt' data-toggle='tooltip' data-placement='top' title='历史订单' style='font-size: 15px' aria-hidden='true'></span></a> "
+
+
+                    $("#tableBody").append(
+                "<tr " + strClass + "><td>" + obj[i].CstNo + "</td><td>" + obj[i].CstName + "</td><td>" + obj[i].CstManager + "</td><td>" + obj[i].CstTel + "</td><td>" + obj[i].CstStatus + "</td><td>" + aUrl + "</td></tr>");
+                }
+                $("[data-toggle='tooltip']").tooltip();
+                if (pageListButton) {
+                               pageListButton();
+                         }
+            }
+
+            function getInfo() {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: "../../Control/clientManageControl/clientManageHandler.ashx",
+                    async: false,
+                    error: function (request) {
+                        alert("服务器暂时无法响应，请稍后...");
+                    },
+                    success: function (data) {
+                        //更新json
+                        json = data;
+                        //调用分页函数
+                        pageList(json, ListCount, "1")
+                       // viewTable(data);
+                        //$("#main")[0].contentWindow.getInfo(); //获取子窗体中的方法
+                        window.parent.addClick();
+                    }
+                });
+
+            }
+                   
+           
+	
+    </script>
+</body>
+</html>

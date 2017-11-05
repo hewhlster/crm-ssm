@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.fjh.dao.SalPlanMapper">
+  <resultMap id="BaseResultMap" type="org.fjh.entity.SalPlan">
+    <id column="pla_id" jdbcType="BIGINT" property="plaId" />
+    <result column="pla_chc_id" jdbcType="BIGINT" property="plaChcId" />
+    <result column="pla_date" jdbcType="TIMESTAMP" property="plaDate" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.fjh.entity.SalPlanWithBLOBs">
+    <result column="pla_todo" jdbcType="LONGVARCHAR" property="plaTodo" />
+    <result column="pla_result" jdbcType="LONGVARCHAR" property="plaResult" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    pla_id, pla_chc_id, pla_date
+  </sql>
+  <sql id="Blob_Column_List">
+    pla_todo, pla_result
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="org.fjh.entity.SalPlanExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sal_plan
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="org.fjh.entity.SalPlanExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sal_plan
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sal_plan
+    where pla_id = #{plaId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sal_plan
+    where pla_id = #{plaId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.fjh.entity.SalPlanExample">
+    delete from sal_plan
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.fjh.entity.SalPlanWithBLOBs">
+    insert into sal_plan (pla_id, pla_chc_id, pla_date, 
+      pla_todo, pla_result)
+    values (#{plaId,jdbcType=BIGINT}, #{plaChcId,jdbcType=BIGINT}, #{plaDate,jdbcType=TIMESTAMP}, 
+      #{plaTodo,jdbcType=LONGVARCHAR}, #{plaResult,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.fjh.entity.SalPlanWithBLOBs">
+    insert into sal_plan
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="plaId != null">
+        pla_id,
+      </if>
+      <if test="plaChcId != null">
+        pla_chc_id,
+      </if>
+      <if test="plaDate != null">
+        pla_date,
+      </if>
+      <if test="plaTodo != null">
+        pla_todo,
+      </if>
+      <if test="plaResult != null">
+        pla_result,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="plaId != null">
+        #{plaId,jdbcType=BIGINT},
+      </if>
+      <if test="plaChcId != null">
+        #{plaChcId,jdbcType=BIGINT},
+      </if>
+      <if test="plaDate != null">
+        #{plaDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="plaTodo != null">
+        #{plaTodo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="plaResult != null">
+        #{plaResult,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.fjh.entity.SalPlanExample" resultType="java.lang.Long">
+    select count(*) from sal_plan
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update sal_plan
+    <set>
+      <if test="record.plaId != null">
+        pla_id = #{record.plaId,jdbcType=BIGINT},
+      </if>
+      <if test="record.plaChcId != null">
+        pla_chc_id = #{record.plaChcId,jdbcType=BIGINT},
+      </if>
+      <if test="record.plaDate != null">
+        pla_date = #{record.plaDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.plaTodo != null">
+        pla_todo = #{record.plaTodo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.plaResult != null">
+        pla_result = #{record.plaResult,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update sal_plan
+    set pla_id = #{record.plaId,jdbcType=BIGINT},
+      pla_chc_id = #{record.plaChcId,jdbcType=BIGINT},
+      pla_date = #{record.plaDate,jdbcType=TIMESTAMP},
+      pla_todo = #{record.plaTodo,jdbcType=LONGVARCHAR},
+      pla_result = #{record.plaResult,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sal_plan
+    set pla_id = #{record.plaId,jdbcType=BIGINT},
+      pla_chc_id = #{record.plaChcId,jdbcType=BIGINT},
+      pla_date = #{record.plaDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.fjh.entity.SalPlanWithBLOBs">
+    update sal_plan
+    <set>
+      <if test="plaChcId != null">
+        pla_chc_id = #{plaChcId,jdbcType=BIGINT},
+      </if>
+      <if test="plaDate != null">
+        pla_date = #{plaDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="plaTodo != null">
+        pla_todo = #{plaTodo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="plaResult != null">
+        pla_result = #{plaResult,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where pla_id = #{plaId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.fjh.entity.SalPlanWithBLOBs">
+    update sal_plan
+    set pla_chc_id = #{plaChcId,jdbcType=BIGINT},
+      pla_date = #{plaDate,jdbcType=TIMESTAMP},
+      pla_todo = #{plaTodo,jdbcType=LONGVARCHAR},
+      pla_result = #{plaResult,jdbcType=LONGVARCHAR}
+    where pla_id = #{plaId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.fjh.entity.SalPlan">
+    update sal_plan
+    set pla_chc_id = #{plaChcId,jdbcType=BIGINT},
+      pla_date = #{plaDate,jdbcType=TIMESTAMP}
+    where pla_id = #{plaId,jdbcType=BIGINT}
+  </update>
+</mapper>

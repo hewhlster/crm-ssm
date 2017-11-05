@@ -1,0 +1,190 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>菜单栏</title>
+    <meta name="keywords" content="侧边导航菜单(可分组折叠)">
+    <meta name="description" content="侧边导航菜单(可分组折叠)" />
+    <meta name="HandheldFriendly" content="True" />
+    <style>
+        .panel-group
+        {
+            max-height: 770px;
+            overflow: hidden;
+        }
+        .leftMenu
+        {
+            margin: 10px;
+            margin-top: 5px;
+        }
+        .leftMenu .panel-heading
+        {
+            font-size: 14px;
+            padding-left: 20px;
+            height: 36px;
+            line-height: 36px;
+            color: white;
+            position: relative;
+            cursor: pointer;
+        }
+        /*转成手形图标*/
+        .leftMenu .panel-heading span
+        {
+            position: absolute;
+            right: 10px;
+            top: 12px;
+        }
+        .leftMenu .menu-item-left
+        {
+            padding: 2px;
+            background: transparent;
+            border: 0px solid transparent;
+            border-radius: 6px;
+        }
+        .leftMenu .menu-item-left:hover
+        {
+            background: #C4E3F3;
+            border: 0px solid #1E90FF;
+        }
+    </style>
+</head>
+<body style="background-color: #DCDCDC;">
+    <!-- <div class="col-md-2">-->
+    <div id="accordion2" class="panel-group table-responsive " role="tablist">
+        <div id="yinxiao" style="display: none" class="panel panel-primary leftMenu">
+            <!-- 利用data-target指定要折叠的分组列表 -->
+            <div class="panel-heading" id="collapseListGroupHeading1" data-toggle="collapse"
+                data-parent="#accordion2" data-target="#collapseListGroup1" role="tab">
+                <h4 class="panel-title">
+                    营销管理
+                </h4>
+            </div> 
+         <!-- .panel-collapse和.collapse标明折叠元素 .in表示要显示出来 -->
+            <div id="collapseListGroup1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading1">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <!-- 利用traUrl('test.aspx')指定URL -->
+                        <button class="menu-item-left" onclick="traUrl('salesManageHtml/salesManage-select.aspx',this)">
+                            销售机会管理
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--panel end-->
+        <div id="kehu" style="display: none" class="panel panel-primary leftMenu">
+            <div class="panel-heading" id="collapseListGroupHeading2" data-toggle="collapse"
+                data-parent="#accordion2" data-target="#collapseListGroup2" role="tab">
+                <h4 class="panel-title">
+                    客户管理
+                </h4>
+            </div>
+            <div id="collapseListGroup2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading2">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button class="menu-item-left" onclick="traUrl(' clientManageHtml/clientManage-select.aspx',this)">
+                            客户信息
+                        </button>
+                    </li>
+                    <li class="list-group-item">
+                        <button class="menu-item-left" onclick="  traUrl('clientManageHtml/clientManage-lose.aspx',this)">
+                            客户流失
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="fuwu" style="display: none" class="panel panel-primary leftMenu">
+            <div class="panel-heading" id="collapseListGroupHeading3" data-toggle="collapse"
+                data-parent="#accordion2" data-target="#collapseListGroup3" role="tab">
+                <h4 class="panel-title">
+                    服务管理
+                </h4>
+            </div>
+            <%--<input type="hidden" value="good" name="inputtest" id="inputtest"/>--%>
+            <div id="collapseListGroup3"  class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading3">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button class="menu-item-left" onclick="  traUrl('serverManageHtml/serverManage-server.aspx',this)">
+                            服务 
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="tongji" style="display: none" class="panel panel-primary leftMenu">
+            <div class="panel-heading" id="collapseListGroupHeading4" data-toggle="collapse"
+                data-parent="#accordion2" data-target="#collapseListGroup4" role="tab">
+                <h4 class="panel-title">
+                    统计报表
+                </h4>
+            </div>
+            <div id="collapseListGroup4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading4">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button class="menu-item-left" onclick="  traUrl('statisticsHtml/statistics-server.aspx',this)">
+                            客户服务分析
+                        </button>
+                    </li>
+                    <li class="list-group-item">
+                        <button class="menu-item-left" onclick="  traUrl('statisticsHtml/statistics-contribute.aspx',this)">
+                            客户贡献分析
+                        </button>
+                    </li>
+                    <li class="list-group-item">
+                        <button class="menu-item-left" onclick="  traUrl('statisticsHtml/statistics-compose.aspx',this)">
+                            客户组成分析
+                        </button>
+                    </li>
+                    <li class="list-group-item">
+                        <button class="menu-item-left" onclick="  traUrl('statisticsHtml/statistics-lose.aspx',this)">
+                            客户流失分析
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="jichu"  style="display: none" class="panel panel-primary leftMenu">
+            <div class="panel-heading" id="collapseListGroupHeading5" data-toggle="collapse" 
+             data-parent="#accordion2" data-target="#collapseListGroup5" role="tab">
+                <h4 class="panel-title">
+                    基础数据
+                </h4>
+            </div>
+            <div id="collapseListGroup5"  class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading5">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button class="menu-item-left" onclick="  traUrl('basisDataHtml/basisData-productInformation.aspx',this)">
+                            产品信息
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="quanxian" style="display: none" class="panel panel-primary leftMenu">
+            <div class="panel-heading" id="collapseListGroupHeading6" data-toggle="collapse"
+                data-parent="#accordion2" data-target="#collapseListGroup6" role="tab">
+                <h4 class="panel-title">
+                    权限管理
+                </h4>
+            </div>
+            <div id="collapseListGroup6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading6">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button class="menu-item-left" onclick="  traUrl('rightManageHtml/rightManage-user.aspx',this)">
+                            用户
+                        </button>
+                    </li>
+                    </ul>
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" type="text/css" href="resource/css/style.css" />
+    <script type="text/javascript" src="resource/js/bootstrap-LeadInto.js"></script>
+    <script src="resource/js/changeLead.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

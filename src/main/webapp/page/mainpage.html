@@ -1,0 +1,257 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        *
+        {
+            margin: 0;
+            padding: 0;
+        }
+        #lead, #main
+        {
+            background: transparent;
+        }
+    </style>
+    <script type="text/javascript" src="resource/js/bootstrap-LeadInto.js"></script>
+      <link rel="stylesheet" type="text/css" href="resource/css/sweetalert.css"/>
+    <script src="resource/js/sweetalert.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body style="background-color: whitesmoke;">
+    <div  class="container divContainer">
+        <iframe id="top" src="top.html" class="embed-responsive-item" width="100%" style="display: block;
+            border: 0;" frameborder="0" scrolling="no"></iframe>
+        <div class="col-md-2 " style="margin: 0; padding: 0;">
+            <iframe id="right" class="embed-responsive-item" scrolling="auto" frameborder="0"
+                src="left.html" width="100%" style="display: block; border: 0;"></iframe>
+        </div>
+        <div class="col-md-10" style="margin: 0; padding: 0; background-color: whitesmoke;">
+            <iframe id="lead" class="embed-responsive-item" scrolling="no" src="lead.html" width="100%"
+                height="30px" style="display: block; border: 0;"></iframe>
+            <!--****************修改这个路径****************-->
+            <iframe id="main"  class="embed-responsive-item"
+                scrolling="auto" width="100%" style="display: block; border: 0;"></iframe>
+        </div>
+    </div>
+    <input type="hidden" id="rolename" value="Jack"/>
+    <div class="modal fade " id="myModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel">
+        <div id="Mymodal-dialog " class="modal-dialog " role="document">
+            <div id="Mymodal-content" class="modal-content col-sm-12">
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+         $("#lead").load(function() {
+
+                 var rolename = $("#rolename").val();
+            if (rolename === "销售经理" || rolename === "客户经理") {
+     
+                $(document.getElementById('lead').contentWindow.document.body).find("#firstA").text("营销管理");
+                $(document.getElementById('lead').contentWindow.document.body).find("#secondA").text(" 销售机会管理");
+            
+            }
+            else if (rolename === "高管") {
+          
+                $(document.getElementById('lead').contentWindow.document.body).find("#firstA").text("统计报表");
+                $(document.getElementById('lead').contentWindow.document.body).find("#secondA").text(" 客户服务分析");
+             
+            }
+            else if (rolename === "管理员") {
+               
+                $(document.getElementById('lead').contentWindow.document.body).find("#firstA").text("基础数据");
+                $(document.getElementById('lead').contentWindow.document.body).find("#secondA").text(" 产品信息");
+
+
+
+            } 
+        });
+        $("#right").load(function () {
+          
+            var rolename = $("#rolename").val();
+            if (rolename === "销售经理" || rolename === "客户经理") {
+                $("#main").attr("src", "salesManageHtml/salesManage-select.html");
+                $(document.getElementById('right').contentWindow.document.body).find("#yinxiao").show();
+                $(document.getElementById('right').contentWindow.document.body).find("#kehu").show();
+                $(document.getElementById('right').contentWindow.document.body).find("#fuwu").show();
+                $(document.getElementById('right').contentWindow.document.body).find("#jichu").remove();
+                $(document.getElementById('right').contentWindow.document.body).find("#quanxian").remove();
+                $(document.getElementById('right').contentWindow.document.body).find("#tongji").remove();
+              
+                $(document.getElementById('right').contentWindow.document.body).find("#collapseListGroup1").attr("class", "panel-collapse collapse in");
+                //$("#main").attr("src", "salesManageHtml/salesManage-select.html");
+
+            }
+            else if (rolename === "高管") {
+                $("#main").attr("src", "statisticsHtml/statistics-server.html");
+                $(document.getElementById('right').contentWindow.document.body).find("#tongji").show();
+                $(document.getElementById('right').contentWindow.document.body).find("#yinxiao").remove();
+                $(document.getElementById('right').contentWindow.document.body).find("#kehu").remove();
+                $(document.getElementById('right').contentWindow.document.body).find("#fuwu").remove();
+                $(document.getElementById('right').contentWindow.document.body).find("#jichu").remove();
+                $(document.getElementById('right').contentWindow.document.body).find("#quanxian").remove();
+    
+                $(document.getElementById('right').contentWindow.document.body).find("#collapseListGroup4").attr("class", "panel-collapse collapse in");
+            }
+            else if (rolename === "管理员") {
+                $("#main").attr("src", "basisDataHtml/basisData-productInformation.html");
+                $(document.getElementById('right').contentWindow.document.body).find("#jichu").show();
+                $(document.getElementById('right').contentWindow.document.body).find("#quanxian").show();
+                $(document.getElementById('right').contentWindow.document.body).find("#yinxiao").remove();
+                $(document.getElementById('right').contentWindow.document.body).find("#kehu").remove();
+                $(document.getElementById('right').contentWindow.document.body).find("#fuwu").remove();
+                $(document.getElementById('right').contentWindow.document.body).find("#tongji").remove();
+         
+                $(document.getElementById('right').contentWindow.document.body).find("#collapseListGroup5").attr("class", "panel-collapse collapse in");
+            }
+        });
+
+        //alert(rolename);
+        ///注意！！！！！！！！！！！！！！
+        function salesManageSelect(obj) {
+            //alert($("#myModal").find("#optlkmname").size());
+            if ($("#myModal").find("#optlkmname").size() !== 0) {
+                var no = $(obj).attr("data-no");
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '../Control/salesManageControl/salesManageGetLinkmanHandler.ashx?no=' + no,
+                    async: false,
+                    error: function (request) {
+                        alert("服务器暂时无法响应，请稍后1.");
+                    },
+                    success: function (data) {
+                        var list = JSON.parse(data);
+                        var selecCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCtlinkMan = $("#myModal").find("#selectInputId").val();
+                        $("#myModal").find("#optlkmname").html("");
+                        for (var i in list) {
+                            $("#myModal").find("#optlkmname").append("<option>" + list[i] + "</option>");
+                        }
+                        $("#myModal").find("#optlkmname").val(selectlinkMan);
+                    }
+                });
+            }
+        }
+
+        function sweet(obj,doFunctin)
+        {
+            swal({
+                    title: "确定删除",
+                    text: "你将会删除这条记录!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确认",
+                    cancelButtonText: "取消",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        if (doFunctin) {
+                            if( doFunctin(obj))
+                                swal("成功!", "此条记录已删除.", "success");
+                            else
+                                swal("失败", "服务器无响应", "error");
+                        }
+                       
+                    } else {
+                        swal("取消", "此记录删除失败", "error");
+                    }
+                });
+        }
+        $("#main").load(function () {
+            var mianIframe = $(this).attr("src");
+            var url1="salesManageHtml/salesManage-select.html";
+            var url2="serverManageHtml/serverManage-server.html";
+            var btnText = $("#main", window.parent.document).contents().find(".selectBtn").text();
+            if (btnText=="查询")
+            {
+                var kidNum = $("#lead").contents().find("#ul1").children().length;
+                if (kidNum == 3) {
+                    $("#lead", window.parent.document).contents().find("#thirLi").remove();
+                }
+            }
+        });
+        function addClick() {
+            $("#main,#top").contents().find(".buttin1").click(function () {
+                var fatherBody = $(window.top.document.body);
+                var companyId = $(this).attr("data-companyId");
+                var obj = $(this);
+                var theString = $(this).attr("data-url");
+                arr = theString.split("-");
+                var usrl = arr[0] + "Html/" + theString;
+                fatherBody.find("#myModal").modal({
+                    remote: usrl
+                });
+                var count = 0;
+                $("#myModal").on('loaded.bs.modal', function () {
+                    if (salesManageSelect)
+                        salesManageSelect(obj);
+                    $("#myModal").off("loaded.bs.modal");
+                    count++;
+                });
+                var a = count;
+                var b = 0;
+
+
+            });
+        }
+
+        $(document).ready(function () {
+            $("#myModal").on("hidden.bs.modal", function () {
+                $(".modal-content").children().remove();
+                $(this).removeData("bs.modal");
+                $("#Mymodal-content").attr("class", "modal-content col-sm-12");
+            });
+            $("#main,#top").load(function () {
+                addClick();
+            });
+            //给iframe初始高度
+            changeHegth();
+            //当页面大小改变时修改iframe高度
+            $(window).resize(function () {
+              
+                //if (windowWidth <= 991)
+                //{
+                //    $(".divContainer").attr("style", "padding: 0; margin: 0;margin-right:0;");
+                //    $(".divContainer").attr("width", "100%");
+                //} 
+                changeHegth();
+            });
+            //修改ifame的高度
+            function changeHegth() {
+                $(function () {
+
+                    var top_height = $("#top").contents().find("#top_body").height();
+                    $("#top").height(top_height);
+
+                    $("#top").load(function () {
+                        var top_height = $(this).contents().find("#top_body").height();
+
+                        $(this).height(top_height);
+                    });
+                });
+                var windowWidth = $(window).width();
+                if (windowWidth <= 991) {
+                    $("#right").height(250);
+                    var height = $(window).height() - $("#top").height();
+                    $("#main").height(height - 30);
+                }
+                else {
+                    var height = $(window).height() - $("#top").height();
+                    $("#right").height(height);
+                    $("#main").height(height - 30);
+                }
+            }
+        });
+     
+      
+        //  alert(rolename);
+    </script>
+</body>
+</html>

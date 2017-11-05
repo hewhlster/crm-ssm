@@ -1,0 +1,103 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>客户管理-客户信息-联系人-编辑</title>
+    <style type="text/css">
+        .control-label
+        {
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+       
+    </style>
+</head>
+
+<body>
+    <!-- Modal -->
+    <form id="linkmanEditForm" class="form-horizontal" role="form">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+            <label class="control-label">
+                联系人编辑</label></h4>
+    </div>
+    <div class="modal-body row ">
+        <div class="col-sm-12 column">
+            <div class="form-group inscop">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    姓名</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" name="lkmName" value="<%=Request["name"]%>" readonly="readonly" />
+                </div>
+        
+            </div>
+            <div class="form-group inscop">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    任务</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" name="lkmTask" value="<%=Request["task"]%>" readonly="readonly"/>
+                </div>
+            </div>
+            <div class="form-group">
+            <div class="inscop">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    联系电话</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" name="lkmTel" value="<%=Request["LkmTel"]%>" />
+                </div>
+                </div>
+            </div>
+            <div class="form-group inscop">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    私人电话</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" name="lkmPtel" value="<%=Request["LkmPtel"]%>" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    备注</label>
+                <div class="col-sm-9">
+                    <textarea class="form-control" rows="7" style="resize: none;"></textarea>
+                </div>
+            </div>
+        </div>
+    </div> </form>
+    <div class="modal-footer form-group" style="margin-bottom: 0;">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+            关闭</button>
+        <button type="button" class="btn btn-primary submitForm" data-dismiss="modal" onclick="submitFrom1()">
+            保存</button>
+    </div>
+   
+    <script src="resource/js/checkModel.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        function submitFrom1() {
+    $('form').bootstrapValidator('validate');
+    var formState = $('form').data('bootstrapValidator').isValid()
+    if (formState) {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../Control/clientManageControl/linkmanEditHandler.ashx?cstNo=<%=Request["Lkmno"]%>",
+                data: $("#linkmanEditForm").serialize(),
+                async: false,
+                error: function (request) {
+                    alert("客户联系人信息修改失败！！");
+                },
+                success: function (data) {
+                    alert("客户联系人信息修改成功！！")
+                 
+                    $("#main")[0].contentWindow.getInfo();//获取子窗体中的方法
+                    addClick();
+                }
+            });
+        }}
+    </script>
+</body>
+</html>

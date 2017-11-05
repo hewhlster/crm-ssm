@@ -1,0 +1,374 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>权限管理-用户</title>
+      <script src="../resource/js/bootstrap-LeadInto.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../resource/js/bootstrap3-editable-Leadinto.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row clearfix" style="margin-top: 3%; margin-bottom: 1%;">
+            <div class="col-sm-12 column" style="margin-bottom: 1%;">
+                <div class="col-sm-2 column ">
+                    <a href="#" class="buttin1">
+                        <button onClick="getNextId()" class="btn btn-default btn-block btn-primary" data-toggle="tooltip">
+                            新增</button>
+                    </a>
+                </div>
+            </div>
+            <form id="reigthForm">
+            <div class="col-sm-12 column">
+                <div class="col-sm-4 column form-horizontal">
+                    <div class="form-group ">
+                        <label  class="col-sm-4 control-label">
+                            编号</label>
+                        <div class="col-sm-7">
+                            <input name="Num" type="text" class="form-control" id="inputEmail3" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 column form-horizontal">
+                    <div class="form-group ">
+                        <label for="inputEmail3" class="col-sm-4 control-label">
+                            角色</label>
+                        <div class="col-sm-7">
+                            <select name="Roles" class="form-control">
+                                <option value="">—</option>
+                                <option value="管理员">管理员</option>
+                                <option value="销售经理">销售经理</option>
+                                <option value="客户经理">客户经理</option>
+                                <option value="高管">高管</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                </form>
+                <div class="col-sm-2 column col-sm-offset-1">
+                    <button id="submitForm" onclick="submitFrom()" type="button" class="btn btn-default btn-block btn-primary submitForm">查询</button>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <table class="table" style="min-height:294.4px;">
+                    <thead>
+                        <tr>
+                            <th>
+                                编号
+                            </th>
+                            <th>
+                                姓名
+                            </th>
+                            <th>
+                                角色
+                            </th>
+                            <th>
+                                联系电话
+                            </th>
+                            <th>
+                                地址
+                            </th>
+                            <th>
+                                状态
+                            </th>
+                            <th>
+                                操作
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                      
+                    </tbody>
+                </table>
+                <div class="row clearfix ">
+                   
+                    <div class="col-md-5 column">
+                        
+                        <ul class="pagination" > 
+                            <li><a rel="nofollow" href="#">上一页</a> </li>
+                            <li><a rel="nofollow" href="#">1</a> </li>
+                            <li><a rel="nofollow" href="#">2</a> </li>
+                            <li><a rel="nofollow" href="#">3</a> </li>
+                            <li><a rel="nofollow" href="#">4</a> </li>
+                            
+                            <li><a rel="nofollow" href="#">下一页</a> </li>
+                        </ul>
+                          
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <script src="../resource/js/pageList.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+       
+         $(function () {
+            $('form').bootstrapValidator({
+               
+                feedbackIcons: {
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    Num: {
+                     group: '.col-sm-7',
+                     resetFormData: false,
+                        validators: {
+                          stringLength: {
+                             min: 0,
+                             max: 18,
+                             message: '内容不能大于20字符'
+                         },
+                            regexp: {
+                                regexp: /^[0-9]+$/,
+                                message: '编号只能包含数字'
+                            }
+                        }
+                    }
+                }
+            }).on('success.field.bv', function(e, data) {//表单中元素验证成功事件
+                     $(data.element[0]).parent().removeClass("has-success");
+                    $("#submitForm").removeAttr("disabled");
+
+              })  .on('error.field.bv', function(e, data) {//表单中元素验证失败事件
+                     $("#submitForm").attr("disabled","disabled");
+                }).on('error.form.bv', function(e) {//表单全部验证失败事件
+                         $("#submitForm").attr("disabled","disabled");
+       
+                }).on('success.form.bv', function(e) {//表单全部验证成功事件
+                         $("#submitForm").removeAttr("disabled");
+                    });
+                });
+
+        window.onload = function () {
+            getInfo();
+          
+        }
+        function getNextId() {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "../../Control/rightManageControl/getNextNum.ashx",
+               
+                async: false,
+                error: function (requset) {
+                    alert("服务器无响应");
+                },
+                success: function (data) {
+                    
+                    $(".buttin1").attr("data-url", "rightManage-add.aspx?id=" + data);
+                }
+            });
+        }
+        function submitFrom() {
+         $('form').bootstrapValidator('validate');
+           var formState=$('form').data('bootstrapValidator').isValid()
+          if(formState){
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../../Control/rightManageControl/selectTheUer.ashx",
+                data: $("#reigthForm").serialize(),
+                async: false,
+                error: function (request) {
+                    alert("服务器暂时无法响应，请稍后...");
+                 
+                },
+                success: function (data) {
+                    json = data;
+                    pageList(json, ListCount, "1");
+                 
+                }
+            });
+            }
+        }
+        var RoleArry = new Array();
+        ///////////////////////////////////////////////////////////////////////////////
+        function viewTable(json, pageListButton) {
+           
+            //////////////////////////////////////////////////////////////////////////////
+            var obj = JSON.parse(json);
+            $("#tableBody").html(""); //清空table
+            for (var i = 0; i < obj.length; i++) {
+                var strClass = "class=";
+                switch (i % 5) {
+                    case 0:
+                        nameClass = "";
+                        break;
+                    case 1:
+                        nameClass = "active";
+                        break;
+                    case 2:
+                        nameClass = "success";
+                        break;
+                    case 3:
+                        nameClass = "warning";
+                        break;
+                    case 4:
+                        nameClass = "danger";
+                        break;
+                }
+                RoleArry[i] = obj[i].RolesName;
+                var Aspan = "<span class='glyphicon glyphicon-ok' data-toggle='tooltip' data-placement='top' title='启用' style='font-size: 15px' aria-hidden='true'>";
+                if (obj[i].UsersState=="正常")
+                    Aspan="<span class='glyphicon glyphicon-remove' data-toggle='tooltip' data-placement='top' title='禁用' style='font-size: 15px' aria-hidden='true'></span>";
+               
+                var Astr = " <a href='#' id='banA" + obj[i].UsersNo + "' data-id='" +
+                obj[i].UsersNo + "' class='banA'>" + Aspan + "</a>";
+                var userno=""+<%= Session["userno"]%>;
+                if (obj[i].UsersNo==userno)
+                {
+                    Astr="";
+                }
+                //*******************************************///
+                var Aurl = " ../../Control/rightManageControl/updataUserRight.ashx"
+                //(obj[i].UsersNo == "") ? "无" : obj[i].UsersNo
+                //((obj[i].UsersName == "") ? "无" : obj[i].UsersName)
+                strClass += "\"" + nameClass + "\"";
+                $("#tableBody").append(
+                "<tr " + strClass + "><td>"
+                + ((obj[i].UsersNo == "") ? "无" : obj[i].UsersNo )+ "</td><td>"
+                + ((obj[i].UsersName == "") ? "无" : obj[i].UsersName) + "</td><td><a href='#' id='Roles"
+                + ((obj[i].UsersNo == "") ? "无" : obj[i].UsersNo) + "' data-type='select'  data-url='"
+                + Aurl + "' >" 
+                + ((obj[i].RolesName == "") ? "无" : obj[i].RolesName) + "</a></td><td>"
+                + ((obj[i].UsersTel  == "") ? "无" : obj[i].UsersTel )+ "</td><td>"
+                + ((obj[i].UsersAddr  == "") ? "无" : obj[i].UsersAddr )+ "</td><td id='tdState" + obj[i].UsersNo + "'>"
+                + ((obj[i].UsersState == "") ? "无" : obj[i].UsersState) + "</td><td>"
+                + Astr + "</td></tr>");
+                var Aid = "#Roles" + obj[i].UsersNo;
+                
+                $(Aid).editable({
+                    value: obj[i].RolesName,
+                    pk: obj[i].UsersNo,//使用pk传UsersNo
+                    title: "权限",
+                    source: [
+                                { value: '管理员', text: '管理员' },
+                                { value: '销售经理', text: '销售经理' },
+                                { value: '客户经理' , text: '客户经理' },
+                                { value: '高管', text: '高管' }
+                    ],
+                    error: function (response, newValue) {
+
+                        alert("服务器暂时无法响应，请稍后...");
+                    },
+                    success: function (response, newValue) {
+                        if (response > 0) {
+                            alert("修改权限成功");
+                            $(this).editable('option', 'display', true);
+                        }  
+                        else {
+                           
+                            $(this).editable('option', 'display', false);
+                        }
+                    }
+                });
+                if (obj[i].UsersState == "禁用") {
+                    $(Aid).editable('disable');
+                }
+            }
+            ////////////////////////////////////////////////////////////////////////////////
+            $("[data-toggle='tooltip']").tooltip();
+            /////////////////////////////////////////////////////////////////////////////////////////////
+            $(".banA").click(function () {
+
+                var Num = $(this).attr("data-id");
+                var Aid = "#Roles" + (Num);
+                var tdId = "#tdState" + (Num);
+                if($(tdId).text()=="禁用")
+                {
+                    permitA(Num, tdId,Aid);
+                }
+                else if ($(tdId).text() == "正常") {
+                    banA(Num, tdId,Aid);
+                  }
+            });
+            //////////////////////////////////////////////////////////////////////////////////
+            if (pageListButton) {
+                pageListButton();
+            }
+        }
+     
+
+
+        function permitA(Num, tdId, Aid)
+        {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: "../../Control/rightManageControl/permitUser.ashx?Num=" + Num,
+                    async: false,
+                    error: function (request) {
+                        alert("服务器暂时无法响应，请稍后...");
+                    },
+                    success: function (data) {
+                        if (data > 0) {
+                            var aId = "#banA" + (Num);
+                            $(aId).html(""); //清空a标签
+                            var spanStr = "<span class='glyphicon glyphicon-remove' data-toggle='tooltip' data-placement='top' title='禁用' style='font-size: 15px' aria-hidden='true'></span>";
+                            $(aId).append(spanStr);
+                            $("[data-toggle='tooltip']").tooltip();
+                            $(tdId).text("正常");
+                            $(Aid).editable('enable');
+
+                        }
+                        else {
+                            alert("成功启用");
+                        }
+                    }
+                });
+        }
+        function banA(Num, tdId,Aid) {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../../Control/rightManageControl/banUser.ashx?Num=" + Num,
+                async: false,
+                error: function (request) {
+                    alert("服务器暂时无法响应，请稍后...");
+                },
+                success: function (data) {
+                    if (data > 0) {
+                        var aId = "#banA" + (Num)
+                        $(aId).html(""); //清空a标签
+                        var spanStr = "<span class='glyphicon glyphicon-ok' data-toggle='tooltip' data-placement='top' title='启用' style='font-size: 15px' aria-hidden='true'>";
+                        $(aId).append(spanStr);
+                        $("[data-toggle='tooltip']").tooltip();
+                        $(tdId).text("禁用");
+                        $(Aid).editable('disable');
+                    }
+                    else {
+                        alert("禁用失败");
+                    }
+                }
+            });
+}
+        function getInfo() {
+            $.ajax({
+                cache: true,
+               
+                type: "POST",
+                url: "../../Control/rightManageControl/selectAllUser.ashx",
+                async: false,
+                error: function (request) {
+                    alert("服务器暂时无法响应，请稍后...");
+                },
+                success: function (data) {
+                 
+                    json = data;
+                    pageList(json, ListCount, "1")
+                 
+                }
+            });
+
+        }
+ 
+
+    </script>
+</body>
+</html>

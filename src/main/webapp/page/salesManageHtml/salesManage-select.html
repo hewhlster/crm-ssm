@@ -1,0 +1,205 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>销售管理-查询</title>
+    <script src="../resource/js/bootstrap-LeadInto.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../resource/js/pageList.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<% string rolename = Session["rolename"].ToString();
+%>
+<body>
+    <div class="container ">
+        <div class="col-ms-12 column clearfix " style="margin-top: 3%; margin-bottom: 2%;">
+            <div class="col-sm-2 column">
+                <% if (rolename == "销售经理")
+                   { %>
+                <a href="../../Control/salesManageControl/salesManageAddHandler.ashx?methodid=gotonew">
+                    <button data-urlname="新增销售机会" type="submit" class="btn btn-default btn-block btn-primary newUrlBtn">
+                        新建</button>
+                </a>
+                <% } %>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-sm-12 column ">
+                <div class="row clearfix ">
+                    <form id="vaguequery">
+                    <div class="col-sm-4 column form-horizontal">
+                        <div class="form-group ">
+                            <label for="inputEmail3" class="col-sm-5 control-label">
+                                客户名称</label>
+                            <div class="col-sm-7">
+                                <input name="cstname" type="text" class="form-control" id="inputEmail3" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 column form-horizontal">
+                        <div class="form-group ">
+                            <label for="inputEmail3" class="col-sm-4 control-label">
+                                联系人</label>
+                            <div class="col-sm-7">
+                                <input name="linkman" type="text" class="form-control" id="inputEmail3" />
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                    <div class="col-sm-2 column form-horizontal col-sm-offset-1">
+                        <button onclick="getVagueInfo()" class="btn btn-default btn-block btn-primary  selectBtn submitForm">
+                            查询</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-12 column">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                编号
+                            </th>
+                            <th>
+                                客户名称
+                            </th>
+                            <th>
+                                联系人
+                            </th>
+                            <th>
+                                联系电话
+                            </th>
+                            <th>
+                                职位
+                            </th>
+                            <th>
+                                指派状态
+                            </th>
+                            <th>
+                                操作
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+                <div class="row clearfix">
+                    <div class="col-md-4 column">
+                    </div>
+                    <div class="col-md-7 column">
+                        <ul class="pagination">
+                            <li class="disabled"><a rel="nofollow">上一页</a>
+                                <li class=""><a rel="nofollow" href=""></a></li>
+                                <li class="disabled"><a rel="nofollow">下一页</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 column">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" charset="utf-8">
+        window.onload = function () {
+            getInfo();
+        }
+        function viewTable(data, pageListButton) {
+            var obj = JSON.parse(data);
+            $("#tableBody").html(""); //清空table
+            for (var i = 0; i < obj.length; i++) {
+                var strClass = "class=";
+                var nameClass;
+                switch (i % 5) {
+                    case 0:
+                        nameClass = "";
+                        break;
+                    case 1:
+                        nameClass = "active";
+                        break;
+                    case 2:
+                        nameClass = "success";
+                        break;
+                    case 3:
+                        nameClass = "warning";
+                        break;
+                    case 4:
+                        nameClass = "danger";
+                        break;
+                }
+                strClass += "\"" + nameClass + "\"";
+                var deal="";
+                <% if (rolename == "客户经理"||rolename == "管理员")
+                { %>
+                if (obj[i].OptStatus ==="已指派") {
+                     deal = '<a data-urlname="处理销售机会" href="salesManage-deal.aspx?optno=' + obj[i].OptNo + '" class="newUrlBtn dealBtn"><span class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="top" title="处理" style="font-size: 17px"aria-hidden="true"></span></a>'; 
+                }
+                <% } %>
+                var edit = "";
+                <% if (rolename == "销售经理"||rolename == "管理员")
+                   { %>
+                if (obj[i].OptStatus ==="未指派") {
+                 edit = "<a href='#'  data-no='"+obj[i].OptCstNo+"' class='buttin1' data-url='salesManage-select-edit.aspx?optno="+ obj[i].OptNo +"'><span id='span1' class='glyphicon glyphicon-edit span1' data-toggle='tooltip' data-placement='top' title='编辑' style='font-size: 17px' aria-hidden='true'></span></a>"; 
+                }
+                <% } %>
+                var deletebtn = "";
+               // alert(obj[i].OptStatus);
+                if (obj[i].OptStatus ==="未指派") {
+                    deletebtn = "<a onclick='if(confirm(\"确定删除当前数据？\")) { return true;} else{return false;}' href='../../Control/salesManageControl/salesManageDeleteHandler.ashx?no="+obj[i].OptNo+"' class='col-sm-offset-1'><span class='glyphicon glyphicon-remove' data-toggle='tooltip'data-placement='top' title='删除' style='font-size: 17px' aria-hidden='true'></span></a>"; 
+                }
+                var nooperate = "";
+                if (obj[i].OptStatus !== '未指派') {
+                    nooperate = '  <a href="#" class="col-sm-offset-1"> <span class="glyphicon glyphicon-lock" data-toggle="tooltip"data-placement="top" title="无法操作" style="font-size: 17px" aria-hidden="true"> </span>';
+                }
+                $("#tableBody").append(
+                "<tr " + strClass + "><td>" + obj[i].OptNo + "</td><td>" + obj[i].OptCstName + "</td><td>" + obj[i].OptLkmName + "</td><td>" + obj[i].OptLkmTel + "</td><td>" + obj[i].OptLkmPosition + "</td><td>" + obj[i].OptStatus + "</td><td>" + deal + edit + deletebtn + nooperate + "</td></tr>");
+            }
+            
+                
+            if (pageListButton) {
+                pageListButton();
+            }
+        }
+        function getInfo() {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../../Control/salesManageControl/salesManageQueryHandler.ashx",
+                async: false,
+                error: function (request) {
+                    alert("服务器暂时无法响应，请稍后1.");
+                },
+                success: function (data) {
+                    //更新json
+                    json = data;
+                    //调用分页函数
+                    pageList(json, ListCount, "1");
+                    //viewTable(data);
+                }
+            });
+        }
+        function getVagueInfo() {
+            //alert($('#vaguequery').serialize());
+            $("#tableBody").html("");
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../../Control/salesManageControl/salesManageQueryHandler.ashx",
+                data: $('#vaguequery').serialize(),
+                async: false,
+                error: function (request) {
+                    alert("服务器暂时无法响应，请稍后...");
+                },
+                success: function (data) {
+                    //  alert("模糊查询提交");
+                    //更新json
+                    json = data;
+                    //调用分页函数
+                    pageList(json, ListCount, "1");
+                    //viewTable(data);
+                }
+            });
+        }   
+    </script>
+</body>
+</html>

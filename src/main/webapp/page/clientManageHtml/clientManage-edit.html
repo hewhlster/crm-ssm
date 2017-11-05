@@ -1,0 +1,167 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>客户管理-客户信息-编辑</title>
+    <style type="text/css">
+        .control-label
+        {
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        .modal-body
+        {
+            margin-right: 1% !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal -->
+    <form id="clientEditForm" class="form-horizontal" role="form">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+            <label class="control-label">
+                客户信息编辑</label></h4>
+    </div>
+    <div class="modal-body row">
+        <div class="col-sm-12 column">
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    客户编号</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" value="<%=Request["id"]%>" readonly="readonly"/>
+                </div>
+                <div class="inscop">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    负责经理</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="cstManage" value="<%=Request["manager"]%>"/>
+                </div>
+                </div>
+            </div>
+            <div class="form-group">
+            <div class="inscop">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    客户名称</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="cstName" readonly="readonly" value="<%=Request["name"]%>"/>
+                </div>
+               </div>
+                <label for="inputPassword3" class="col-sm-2 control-label">
+                    信用度</label>
+                <div class="col-sm-4">
+                    <select class="form-control" name="cstRredit" id="credit">
+                        <option value="1">☆</option>
+                        <option value="2">☆☆</option>
+                        <option value="3">☆☆☆</option>
+                        <option value="4">☆☆☆☆</option>
+                        <option value="5">☆☆☆☆☆</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+            <div class="inscop">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    地区</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="cstRegion" value="<%=Request["region"]%>" />
+                </div>
+                </div>
+                <label for="inputPassword3" class="col-sm-2 control-label">
+                    满意度</label>
+                <div class="col-sm-4">
+                    <select class="form-control" name="cstSatisfy" id="satisfy">
+                        <option value="1">☆</option>
+                        <option value="2">☆☆</option>
+                        <option value="3">☆☆☆</option>
+                        <option value="4">☆☆☆☆</option>
+                        <option value="5">☆☆☆☆☆</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+             <div class="inscop">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    联系电话</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="csttel" value="<%=Request["tel"]%>"/>
+                </div>
+                </div>
+                <label for="inputPassword3" class="col-sm-2 control-label">
+                    客户等级</label>
+                <div class="col-sm-4">
+                    <select class="form-control" name="cstlevel" id="cstlevel" >
+                        <option value="1">小客户</option>
+                        <option value="2">普通客户</option>
+                        <option value="3">大客户</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+             <div class="inscop">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    联系地址</label>
+                <div class="col-sm-4">
+                    <input type="test" class="form-control " name="cstaddr" value="<%=Request["addr"]%>"/>
+                </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    网址</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control " name="cstweb" value="<%=Request["web"]%>"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    备注</label>
+                <div class="col-sm-10">
+                    <textarea name="cstremark" class="form-control" rows="3" style="resize: none;" ><%=Request["remark"]%></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer form-group" style="margin-bottom: 0;">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+            关闭</button>
+        <button type="button" class="btn btn-primary submitForm" data-dismiss="modal" onclick="submitFrom()">
+            保存</button>
+    </div>
+    </form>
+    <script src="resource/js/checkModel.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+
+        $("#cstlevel").val("<%=Request["level"]%>");
+        $("#credit").val("<%=Request["credit"]%>");
+        $("#satisfy").val("<%=Request["satisfy"]%>");
+
+        function submitFrom() {
+    $('form').bootstrapValidator('validate');
+    var formState = $('form').data('bootstrapValidator').isValid()
+    if (formState) {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../Control/clientManageControl/clientEditHandler.ashx?cstNo=<%=Request["id"]%>",
+                data: $("#clientEditForm").serialize(),
+                async: false,
+                error: function (request) {
+                    alert("客户信息修改失败！！");
+                },
+                success: function (data) {
+                    alert("客户信息修改成功！！")
+                    $("#main")[0].contentWindow.getInfo();//获取子窗体中的方法
+                    window.parent.addClick();
+                }
+            });
+        }
+        }
+    </script>
+</body>
+</html>

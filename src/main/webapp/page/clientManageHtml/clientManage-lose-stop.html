@@ -1,0 +1,140 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+		<meta charset="UTF-8">
+		<title>客户管理-客户流失管理-暂缓流失</title>
+		<style type="text/css">
+			
+			.form-group{
+				margin-top: 4%;
+			}
+			p{
+				
+				color: red !important;
+			}
+		</style>
+        <script src="../resource/js/bootstrap-LeadInto.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+ 	<!-- Modal -->
+ <form id="loststopForm" class="form-horizontal center-block" role="form">
+		<div class="col-md-12 column">
+						<div class="col-sm-2 column col-sm-offset-9" >
+							 <button type="submit" class="submitForm btn btn-default btn-block btn-primary " style="margin-top: 10%;margin-bottom: 0;" onclick="submitFrom()">保存</button>
+						</div>
+					</div>
+   	<div class="col-sm-10 column col-sm-offset-1">
+			<table class="table table-bordered table-striped" style="clear: both;margin-top: 5%;" >
+				<tbody>
+					<tr> 
+								<td>
+									<h4  ><label class="col-sm-12 control-label"  style="padding-left: 0;">客户编号:</label></h4>
+									  
+								</td>
+								<td>
+									<h4  >
+									<div class="col-sm-12" style="padding-right: 0;">
+                          
+								      <p class="form-control-static" name="cstNo"><%=Request["cstno"]%></p>
+									</div>
+									</h4>
+								</td>
+								 <td><h4>
+								 	<label class="col-sm-12 control-label" style="padding-left: 0;">客户名称:</label>
+								 	</h4>
+								 </td> 
+								 <td><h4>
+								    <div class="col-sm-12" style="padding-right: 0;">
+								      <p class="form-control-static"><%=Request["name"]%></p>
+								    </div>
+								    </h4>
+								 </td>
+							  </h4>
+						
+					</tr>		
+					<tr>
+						
+							 
+								<td> <h4  ><label class="col-sm-12 control-label" style="padding-left: 0;">最后一次下单日期:</label></h4></td>
+								<td style="border-bottom:hidden ;">
+									<h4  >
+									<div class="col-sm-12" style="padding-right: 0;">
+								      <p class="form-control-static" ><%=Request["date"]%></p>
+									</div>
+									</h4>
+								</td>
+								 <td>
+								 	<h4>
+								 		<label class="col-sm-12 control-label" style="padding-left: 0;">经理:</label>
+								 	</h4>
+								 	
+								 </td> 
+								 <td>
+								 	<h4>
+								 		<div class="col-sm-12" style="padding-right: 0;">
+								      <p class="form-control-static"><%=Request["manege"]%></p>
+								    </div>
+								 	</h4>
+								    
+								 </td>
+							  
+						
+					</tr>			
+					
+					<tr class="inscop">
+								
+						 <h4  >
+						 	<td style="border-right:hidden ;">
+						 		<h4><label for="inputEmail3" class="col-sm-12 control-label" >采取措施:	</label></h4>
+						 	</td>
+						 <td colspan="3" valign="top" style="padding: 0; border-bottom:hidden ;border-right:hidden ;">	
+						 	<h4 style="margin: 0;">
+						 		<div class="col-sm-12" style="padding: 0;">
+									<textarea name="measures" class="form-control" rows="8" style="resize: none; padding: 0;font-size: 20px;"><%=Request["measure"]%></textarea>
+								</div>
+						 	</h4>
+						
+						</td>
+						</h4>
+		 	</tr>
+
+					
+				</tbody>
+			</table>
+		
+	
+		</div>
+   </form>
+    <script src="../resource/js/checkPage.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+
+	    function submitFrom() {
+	        $('form').bootstrapValidator('validate');
+	        var formState = $('form').data('bootstrapValidator').isValid()
+	        if (formState) {
+	            $.ajax({
+	                cache: true,
+	                type: "POST",
+	                url: "../../Control/clientManageControl/lostStopHandler.ashx?cstNo=<%=Request["cstno"]%>",
+	                data: $("#loststopForm").serialize(),
+	                async: false,
+	                error: function (request) {
+	                    alert("暂缓流失失败");
+	                },
+	                success: function (data) {
+	                   
+	                    alert("暂缓流失成功");
+	                    //返回上层页面 
+	                    window.history.back(-1);
+	                }
+	            });
+	        }
+	    }
+    
+    </script>
+
+	</body>
+</html>

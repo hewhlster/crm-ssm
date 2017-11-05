@@ -1,0 +1,246 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta charset="UTF-8">
+    <title>销售管理-查询-编辑</title>
+    <style type="text/css">
+        .control-label
+        {
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        .modal-body
+        {
+            margin-right: 1% !important;
+        }
+    </style>
+</head>
+<% 
+    int optno = int.Parse(Request["optno"]);
+    salesManagePageListDao salesManagePageListDao = new salesManagePageListDao();
+    List<string> clientManagerList = (List<string>)Session["clientManagerList"];
+    Sal_opportunity salOpportunity = new Sal_opportunity();
+    salOpportunity = salesManagePageListDao.UseOptNoToSalopportunity(optno);
+    string createDate = salesManagePageListDao.SetDateString(salOpportunity.OptCreateDate);
+    int aaaa = 0;
+%>
+<body>
+    <!-- Modal -->
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+            <label class="control-label">
+                销售机会编辑</label></h4>
+    </div>
+    <form id="form11" class="form-horizontal" role="form">
+    <div class="modal-body row" id="editmotal">
+        <div class="col-sm-12 ">
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    客户编号</label>
+                <div class="col-sm-4">
+                    <input type="text" name="optno" class="form-control" id="inputEmail3" value="<%=salOpportunity.OptNo %>"
+                        readonly="”readonly”" style="color: red;" />
+                </div>
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    机会来源</label>
+                <div class="col-sm-4">
+                    <input type="text" name="optsource" value="<%=salOpportunity.OptSource %>" class="form-control"
+                        id="inputEmail3" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    客户公司</label>
+                <div class="col-sm-4">
+                    <input name="optsctname" readonly="readonly" value="<%=salOpportunity.OptCstName %>"
+                        required="required" class="form-control" id="optsctname" />
+                </div>
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    成功概率</label>
+                <div class="col-sm-4">
+                    <input type="text" required="required" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'')"
+                        name="optrate" value="<%=salOpportunity.OptRate %>" class="form-control" id="optrate" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label">
+                    需求概要</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" name="optsummary" rows="3" style="resize: none;"><%=salOpportunity.OptSummary %></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    联系人员</label>
+                <div class="col-sm-4">
+                    <input id="selectInputId" type="hidden" value="<%=salOpportunity.OptLkmName %>" />
+                    <select name="optlkmname" onclick="getinfo()" id="optlkmname" class="form-control">
+                        <option>
+                            <%=salOpportunity.OptLkmName %></option>
+                    </select>
+                </div>
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    联系电话
+                </label>
+                <div class="col-sm-4">
+                    <input name="optlkmtel" id="optlkmtel" value="<%=salOpportunity.OptLkmTel%>" type="text"
+                        class="form-control" />
+                </div>
+            </div>
+        
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">
+                机会描述</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" name="optdesc" rows="3" style="resize: none;"><%=salOpportunity.OptDesc%></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">
+                创建人员</label>
+            <div class="col-sm-4">
+                <input type="text" readonly="readonly" name="optcreatename" value="<%=salOpportunity.OptCreateName %>"
+                    class="form-control" id="inputEmail3" />
+            </div>
+            <label for="inputEmail3" class="col-sm-2 control-label">
+                创建日期</label>
+            <div class="col-sm-4">
+                <input type="date" name="optcreatedate" value="<%=createDate %>" readonly="”readonly”"
+                    class="form-control " id="inputEmail3" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">
+                指派人员</label>
+            <div class="col-sm-4">
+                <select name="optduename" id="optduename" class="form-control">
+                    <option value="<%=salOpportunity.OptDueName %>">
+                        <%=salOpportunity.OptDueName %></option>
+                    <% for (int i = 0; i < clientManagerList.Count; i++)
+                       { %>
+                    <option value="<%=clientManagerList[i] %>">
+                        <%=clientManagerList[i]%></option>
+                    <% } %>
+                </select>
+            </div>
+            <label for="inputEmail3" class="col-sm-2 control-label">
+                指派日期</label>
+            <div class="col-sm-4">
+                <input type="date" readonly="readonly" name="optduedate" class="form-control " id="duedata" />
+            </div>
+        </div>
+    </div>
+        </div>
+    </form>
+    <div class="modal-footer form-group" style="margin-bottom: 0;">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+            关闭</button>
+        <button onclick="aa()" class="btn btn-primary" data-dismiss="modal">
+            保存</button>
+    </div>
+    <script>
+        document.getElementById('duedata').valueAsDate = new Date();
+        var first = 1;
+        function getinfo() {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../Control/salesManageControl/salesManageGetAddMsgHandler.ashx",
+                data: $('#form1').serialize(),
+                async: false,
+                error: function (requset) {
+                    alert("nono");
+                },
+                success: function (data) {
+                    list = JSON.parse(data);
+                }
+            });
+            var isFirst = 0;
+            $("#optsctname").change(function () {
+                $("#optlkmname").empty();
+                var name = $("#optsctname").val();
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].CstName == name) {
+                        if (isFirst == 0) {
+                            isFirst = i;
+                        }
+                        $("#optlkmname").append("<option>" + list[i].LkmName + "</option>");
+                    }
+                }
+                $("#optlkmtel").val(list[list.length - 1].LkmTel);
+                if ($("#optsctname").val() === '请选择公司') {
+                    $("#optlkmname").append("<option>请选择公司</option>");
+                    $("#optlkmtel").val('请选择公司');
+                    $("#optremark").val('请选择公司');
+                }
+                if ($("#optlkmname").val() == null) {
+                    $("#optlkmname").append("<option>暂无联系人</option>");
+                    $("#optlkmtel").val('暂无联系电话');
+                }
+            });
+            $("#optlkmname").change(function () {
+                $("#optlkmtel").empty();
+                var name = $("#optlkmname").val();
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].LkmName === name) {
+                        $("#optlkmtel").val(list[i].LkmTel);
+                        $("#optremark").val(list[i].LkmRemark);
+                    }
+                }
+            });
+            $("#duename ").change(function () {
+                var a = $("#duename ").val();
+                if ($("#duename ").val() === '空') {
+                    $("#duedate").attr("type", "text");
+                    $("#duedate").val("");
+                } else {
+                    var data = new Date().format("yyyy-MM-dd");
+                    var dataArry = data.split("-");
+                    data = "";
+                    for (var i = 0; i < dataArry.length; i++) {
+                        if (i == 2)
+                            data += dataArry[i];
+                        else {
+                            data += dataArry[i] + "/";
+                        }
+                    }
+                    $("#duedate").val(data);
+                }
+            }
+            );
+        }
+        function aa() {
+            if ($('#optduename option:selected').val() === '空' || $('#optduename option:selected').val() === '空') {
+                alert("未选择指派人,保存失败！");
+                return false;
+            }
+            var value = document.getElementById("optrate").value;
+            var reg = /^\d+$/;
+            if (reg.test(value) == true) {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: "../Control/salesManageControl/salesManageEditHandler.ashx",
+                    data: $('#form11').serialize(),
+                    async: false,
+                    error: function (requset) {
+                    },
+                    success: function (data) {
+                        $("#main")[0].contentWindow.getInfo(); //获取子窗体中的方法
+                        addClick();
+                    }
+                });
+            } else {
+                alert("提交失败!成功概率必须为纯数字");
+                return false;
+            }
+
+        }
+    </script>
+</body>
+</html>

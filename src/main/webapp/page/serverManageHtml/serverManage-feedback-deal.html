@@ -1,0 +1,239 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>服务管理-服务处理</title>
+    <style type="text/css">
+        .form-group
+        {
+            margin-top: 3.5%;
+        }
+        
+        p
+        {
+            color: red !important;
+        }
+    </style>
+     <script src="../resource/js/bootstrap-LeadInto.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <form id="dealform" class="form-horizontal center-block" role="form">
+    <div class="col-md-12 column">
+        <div class="col-sm-2 column col-sm-offset-9">
+            <button type="submit" onclick="submitFrom()" class="btn btn-default btn-block btn-primary" style="margin-top: 10%;
+                margin-bottom: 0;">
+                保存</button>
+        </div>
+    </div>
+    <div class="col-sm-9 column col-sm-offset-1">
+        <div class="form-group" style="margin-top: 1%;">
+            <label for="inputEmail3" class="col-sm-2 control-label">
+                反馈状态</label>
+            <div class="col-sm-4">
+                <select name="dealresult" class="form-control">
+                    <option>完成</option>
+                    
+                </select>
+            </div>
+            <label for="inputEmail3" class="col-sm-2 control-label">
+                客户满意度</label>
+            <div class="col-sm-4">
+                <select name="satisfy" class="form-control">
+                    <option value="5">☆☆☆☆☆</option>
+                    <option value="4">☆☆☆☆</option>
+                    <option value="3">☆☆☆</option>
+                    <option value="2">☆☆</option>
+                    <option value="1">☆</option>
+                </select>
+            </div>
+        </div>
+        <table class="table table-bordered table-striped">
+            <tbody>
+                <tr>
+                    <td class="col-sm-2">
+                        <label for="inputEmail3" class="col-sm-12 control-label">
+                            服务编号</label>
+                    </td>
+                    <td>
+                        <p class="form-control-static"><%=Request["svcno"]%></p>
+                        <input type="hidden" name="svcno" value="<%=Request["svcno"]%>" />
+                    </td>
+                    <td class="col-sm-2">
+                        <label for="inputEmail3" class="col-sm-12 control-label">
+                            服务类型</label>
+                    </td>
+                    <td>
+                        <p id="typeServer" class="form-control-static"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="inputEmail3" class="col-sm-12 control-label">
+                            概要</label>
+                    </td>
+                    <td colspan="3">
+                        <p id="summaryServer" class="form-control-static"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="inputEmail3" class="col-sm-12 control-label">
+                            客户名称</label>
+                    </td>
+                    <td>
+                        <p id="cstname" class="form-control-static"></p>
+                    </td>
+                    <td>
+                        <label for="inputEmail3" class="col-sm-12 control-label">
+                            状态</label>
+                    </td>
+                    <td>
+                        <p id="statusServer" class="form-control-static"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="inputPassword3" class="col-sm-12 control-label">
+                            详细描述</label>
+                    </td>
+                    <td colspan="3">
+                        <p id="detailsServer" class="text-justify"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="inputEmail3" class="col-sm-12 control-label">
+                            创建人</label>
+                    </td>
+                    <td>
+                        <p id="createname" class="form-control-static"></p>
+                    </td>
+                    <td>
+                        <label for="inputEmail3" class="col-sm-12 control-label">
+                            创建时间</label>
+                    </td>
+                    <td>
+                        <p id="createdate" class="form-control-static"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="inputEmail3" class="col-sm-12 control-label">
+                            已给分配</label>
+                    </td>
+                    <td>
+                        <p id="duename" class="form-control-static"></p>
+                    </td>
+                    <td>
+                        <label for="inputEmail3" class="col-sm-12 control-label">
+                            分配时间</label>
+                    </td>
+                    <td>
+                        <p id="duedate" class="form-control-static"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="inputPassword3" class="col-sm-12 control-label">
+                            处理方法</label>
+                    </td>
+                    <td colspan="3">
+                        <p id="dealmethod" class="text-justify"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="inputEmail3" class="col-sm-12 control-label">
+                            处理人</label>
+                    </td>
+                    <td>
+                        <p id="dealman" class="form-control-static"></p>
+                    </td>
+                    <td>
+                        <label for="inputEmail3" class="col-sm-12 control-label">
+                            处理时间</label>
+                    </td>
+                    <td>
+                        <p id="dealdate" class="form-control-static"></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </form>
+   
+    <script type="text/javascript">
+        window.onload = function () {
+            getInfo();
+        }
+
+        function submitFrom() {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../../Control/serverManageControl/serverManageFeedbackData.ashx?svcno=<%=Request["svcno"]%>",
+                data: $("#dealform").serialize(),
+                async: false,
+                error: function (request) {
+                    alert("保存失败！");
+                },
+                success: function (data) {
+                    alert("保存成功！");
+                    window.history.back(-1);
+
+                }
+            });
+        }
+
+        function viewdealTable(data) {
+            var obj = JSON.parse(data);
+
+            var data1 = obj[0].Cst_service.SvcCreateDate.split(" ");
+            obj[0].Cst_service.SvcCreateDate = data1[0];
+            var data2 = obj[0].Cst_service.SvcDueDate.split(" ");
+            obj[0].Cst_service.SvcDueDate = data2[0];
+            var data3 = obj[0].Cst_service.SvcDealDate.split(" ");
+            obj[0].Cst_service.SvcDealDate = data3[0];
+            
+            $("#typeServer").text(obj[0].Cst_service.SvcType);
+            $("#summaryServer").text(obj[0].Cst_service.SvcSummary);
+            $("#cstname").text(obj[0].Name);
+            $("#statusServer").text(obj[0].Cst_service.SvcStatus);
+            $("#detailsServer").text(obj[0].Cst_service.SvcDetails);
+            $("#createname").text(obj[0].Createname);
+            $("#createdate").text(obj[0].Cst_service.SvcCreateDate);
+            $("#duename").text(obj[0].Duename);
+            $("#duedate").text(obj[0].Cst_service.SvcDueDate);
+            $("#dealmethod").text(obj[0].Cst_service.SvcDealMethod);
+            $("#dealman").text(obj[0].Dealname);
+            $("#dealdate").text(obj[0].Cst_service.SvcDealDate);
+        }
+
+       
+
+      
+
+        function getInfo() {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../../Control/serverManageControl/serverManageSelectByno.ashx?svcno=<%=Request["svcno"]%>",
+                async: false,
+                error: function (request) {
+                    alert("服务器暂时无法响应，请稍后...");
+                },
+                success: function (data) {
+                    viewdealTable(data);
+                }
+            });
+
+        }
+
+
+        
+
+    </script>
+</body>
+</html>

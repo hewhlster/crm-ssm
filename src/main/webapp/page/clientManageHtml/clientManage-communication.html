@@ -1,0 +1,247 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>客户管理-客户信息-交往记录</title>
+  <script type="text/javascript" src="../resource/js/bootstrap-LeadInto.js"></script>
+      <link rel="stylesheet" type="text/css" href="../resource/css/sweetalert.css"/>
+    <script src="../resource/js/sweetalert.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="row clearfix">
+                    <div class="col-sm-12 column form-horizontal page-header">
+                        <div class="form-group">
+                            <h4>
+                                <label class="col-sm-2 control-label" style="padding-left: 0;">
+                                    客户编号:</label>
+                                <div class="col-sm-3" style="padding-right: 0;">
+                                    <p  name="cstno" class="form-control-static" style="color: red; id="Cstno"">
+                                        <%=Request["id"]%></p>
+                                        <input type="hidden" value="<%=Request["id"]%>" />
+                                </div>
+                                <label class="col-sm-2 control-label" style="padding-left: 0;">
+                                    客户名称:</label>
+                                <div class="col-sm-3" style="padding-right: 0;">
+                                    <p name="cstname" class="form-control-static" style="color: red;">
+                                        <%=Request["name"]%></p>
+                                </div>
+                            </h4>
+                            <div class="col-sm-2 column">
+                                <a id="btn1" class="buttin1">
+                                    <button type="button" class=" btn btn-default btn-block btn-primary ">
+                                        新建</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        编号
+                                    </th>
+                                    <th>
+                                        时间
+                                    </th>
+                                    <th>
+                                        地点
+                                    </th>
+                                    <th>
+                                        概要
+                                    </th>
+                                    <th>
+                                        联系电话
+                                    </th>
+                                    <th>
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <tr>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row clearfix">
+                            <div class="col-md-4 column">
+                            </div>
+                            <div class="col-md-5 column">
+                                <ul class="pagination">
+                                    <li><a rel="nofollow" href="#">上一页</a> </li>
+                                    <li><a rel="nofollow" href="#">1</a> </li>
+                                    <li><a rel="nofollow" href="#">2</a> </li>
+                                    <li><a rel="nofollow" href="#">3</a> </li>
+                                    <li><a rel="nofollow" href="#">4</a> </li>
+                                    <li><a rel="nofollow" href="#">5</a> </li>
+                                    <li><a rel="nofollow" href="#">下一页</a> </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-3 column">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../resource/js/bootstrap3-editable-Leadinto.js" type="text/javascript"  charset="utf-8"></script>
+     <script src="../resource/js/pageList.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+
+      
+
+        window.onload = function () {
+
+            getInfo();
+        }
+
+        function GetRequest() {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        }
+
+        function getInfo() {
+            var Request = new Object();
+            Request = GetRequest();
+
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../../Control/clientManageControl/commmunicationSelectHandler.ashx?id="+ Request["id"],
+                async: false,
+                error: function (request) {
+                    alert("服务器暂时无法响应，请稍后...");
+                },
+                success: function (data) {
+                    json = data;					   
+                    pageList(json, ListCount, "1");
+                   //viewTable(data);
+                }
+            });
+
+        }
+
+        function viewTable(data, pageListButton) {
+            var obj = JSON.parse(data);
+            $("#tableBody").html(""); //清空table
+            var url2 = "clientManage-communication-add.aspx?id=<%=Request["id"]%>";
+            $("#btn1").attr("data-url", url2);
+          
+            for (var i = 0; i < obj.length; i++) {
+                var strClass = "class=";
+                switch (i % 5) {
+                    case 0:
+                        nameClass = "";
+                        break;
+                    case 1:
+                        nameClass = "active";
+                        break;
+                    case 2:
+                        nameClass = "success";
+                        break;
+                    case 3:
+                        nameClass = "warning";
+                        break;
+                    case 4:
+                        nameClass = "danger";
+                        break;
+                }
+                strClass += "\"" + nameClass + "\"";
+                var url5 = "?id=" + obj[i].CrcCstNo + "&&crcno=" + obj[i].CrcNo;
+             
+
+                var aUrl = "<a onclick='A(" + obj[i].CrcNo + ")' href='#'><span class='glyphicon glyphicon-remove' data-toggle='tooltip' data-placement='top' title='删除' style='font-size: 17px' aria-hidden='true'></span></a>";
+              
+
+                var s = obj[i].CrcTime;
+                // alert(s);
+                var sArray = new Array();
+                sArray =s.split(" ");
+                date=sArray[0];
+                //alert(sArray);
+
+                $("#tableBody").append(
+                "<tr " + strClass + "><td>"
+                + obj[i].CrcNo + "</td><td>" 
+                + date + "</td><td>" 
+                + obj[i].CrcAddr + "</td><td>" + obj[i].CrcSummary + "</td><td>"
+                + obj[i].CrcTel + "</td><td>" + aUrl + "</td></tr>");
+            }
+             $(function () { $("[data-toggle='tooltip']").tooltip(); });
+            if (pageListButton) {
+                      pageListButton();
+                }
+            
+        }
+
+        function A(obj) {
+            window.parent.sweet(obj, doFunctin);
+            
+        }
+
+        function doFunctin(obj) {
+            var right;
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../../Control/clientManageControl/recordDelete.ashx?crcno=" + obj + "",
+                async: false,
+                error: function (request) {
+                    right = false;
+                },
+                success: function (data) {
+                    getInfo();
+                    window.parent.addClick();
+                    right = true;
+                }
+            });
+            return right;
+        }
+
+        $(function () {
+            $('.state').editable({
+                type: "select",              //编辑框的类型。支持text|textarea|select|date|checklist等
+                title: "状态",           //编辑框的标题
+                value: "0",
+                source: [
+            	{ value: 0, text: "——" },
+            	{ value: "未完成", text: "未完成" },
+            	{ value: "已完成", text: "已完成" },
+            	{ value: "已完成", text: "已完成" },
+            	{ value: "已完成", text: "已完成" }
+            ],
+                disabled: false,           //是否禁用编辑
+
+                mode: "popup",            //编辑框的模式：支持popup和inline两种模式，默认是popup
+                validate: function (value) { //字段验证
+                    if (!$.trim(value)) {
+                        return '不能为空';
+                    }
+                }
+            });
+
+        });
+     
+
+
+    </script>
+</body>
+</html>

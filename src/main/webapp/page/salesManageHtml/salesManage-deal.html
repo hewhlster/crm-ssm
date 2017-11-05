@@ -1,0 +1,163 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>营销管理-营销机会处理</title>
+    <style type="text/css">
+        .form-group {
+            margin-top: 3.7%;
+        }	
+        p {
+            color: red !important;
+        }
+    </style>
+<script src="../resource/js/bootstrap-LeadInto.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<%
+
+    int optno = int.Parse(Request["optno"]);
+    salesManagePageListDao salesManagePageListDao = new salesManagePageListDao();
+    Sal_opportunity salOpportunity = new Sal_opportunity();
+    salOpportunity = salesManagePageListDao.UseOptNoToSalopportunity(optno);
+    salesManageDao salesManageDao = new salesManageDao();
+    string aa = salOpportunity.OptDueDate;
+    string createdate = salesManageDao.SetDateString(salOpportunity.OptCreateDate);
+    string duedate = salesManageDao.SetDateString(salOpportunity.OptDueDate);
+ 
+%>
+<body>
+<form method="post" action="../../Control/salesManageControl/salesManageEditHandler.ashx?methodid=2" class="form-horizontal center-block" role="form">
+    <div class="col-md-12 column">
+        <div class="col-sm-2 column col-sm-offset-9">
+            <button type="submit" class="btn btn-default btn-block btn-primary " style="margin-top: 10%;margin-bottom: 0;">保存</button>
+        </div>
+    </div>
+<div class="col-sm-9 column col-sm-offset-1">
+        <table class="table table-bordered table-striped" style="margin-top: 7%;">
+            <tbody>
+            <tr>
+
+                <td class="col-sm-2"> <label for="inputEmail3" class="col-sm-12 control-label">关系编号</label>
+
+                </td>
+
+                <td>
+                    <p class="form-control-static"><%=salOpportunity.OptNo %></p>
+                    <input type="hidden" name="optno" value="<%=salOpportunity.OptNo %>" />
+                </td>
+
+                <td class="col-sm-2"> <label  for="inputEmail3" class="col-sm-12 control-label">机会来源</label></td>
+                <td>
+                    <p  class="form-control-static"><%=salOpportunity.OptSource %></p>
+                </td>
+            </tr>
+            <tr>
+
+                <td class="col-sm-2"> <label for="inputEmail3" class="col-sm-12 control-label">客户名称</label>
+
+                </td>
+
+                <td>
+                    <p class="form-control-static"><%=salOpportunity.OptCstName %></p>
+                </td>
+
+                <td class="col-sm-2"> <label for="inputEmail3" class="col-sm-12 control-label">成功概率</label></td>
+                <td>
+                    <p class="form-control-static"><%=salOpportunity.OptRate %>%</p>
+                </td>
+            </tr>
+            <tr>
+
+                <td> <label for="inputEmail3" class="col-sm-12 control-label">需求概要</label></td>
+
+                <td colspan="3">
+                    <p class="form-control-static"><%=salOpportunity.OptSummary %></p>
+                </td>
+
+            </tr>
+            <tr>
+
+                <td class="col-sm-2"> <label for="inputEmail3" class="col-sm-12 control-label">联系人员</label>
+
+                </td>
+
+                <td>
+                    <p class="form-control-static"><%=salOpportunity.OptLkmName %></p>
+                </td>
+
+                <td class="col-sm-2"> <label for="inputEmail3" class="col-sm-12 control-label">联系电话</label></td>
+                <td>
+                    <p class="form-control-static"><%=salOpportunity.OptLkmTel %></p>
+                </td>
+            </tr>
+            <tr>
+
+                <td> <label for="inputEmail3" class="col-sm-12 control-label">机会描述</label></td>
+
+                <td colspan="3">
+                    <p class="form-control-static"><%=salOpportunity.OptDesc %></p>
+                </td>
+
+            </tr>
+						
+            <tr>
+
+                <td> <label for="inputEmail3" class="col-sm-12 control-label">创建人员</label></td>
+
+                <td>
+                    <p class="form-control-static"><%=salOpportunity.OptCreateName %></p>
+                </td>
+
+                <td> <label for="inputEmail3" class="col-sm-12 control-label">创建日期</label></td>
+
+                <td>
+                    <p class="form-control-static"><%=createdate %></p>
+                </td>
+
+            </tr>
+            <tr>
+
+                <td> <label for="inputEmail3" class="col-sm-12 control-label">指派人员</label></td>
+
+                <td>
+                    <p class="form-control-static"><%=salOpportunity.OptDueName %></p>
+                </td>
+
+                <td><label for="inputEmail3" class="col-sm-12 control-label">指派日期</label></td>
+
+                <td>
+                    <p   class="form-control-static"><%=duedate%></p>
+                    <input type="hidden"  name="optduedate" value="<%=duedate %>"/>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">处理状态</label>
+            <div class="col-sm-4">
+                <select name="optstatus" class="form-control">
+                    <option >处理成功</option>
+                    <option >处理失败</option>
+                </select>
+            </div>
+
+            <label for="inputEmail3" class="col-sm-2 control-label">处理时间</label>
+            <div class="col-sm-4">
+                <input type="date"  class="form-control" disabled="disabled" id="nowdata" />
+            </div>
+
+        </div>
+
+    </div>
+</form>
+<script>
+   
+        document.getElementById('nowdata').valueAsDate = new Date();
+
+</script>
+</body>
+</html>

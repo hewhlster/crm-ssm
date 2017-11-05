@@ -1,0 +1,236 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>客户管理-流失客户</title>
+    <script src="../resource/js/bootstrap-LeadInto.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body style="background-color:white">
+    <div class="container">
+        <div class="row clearfix" style="margin-top: 7%;margin-bottom: 4%;">
+          <form id="lostForm">
+            <div class="col-sm-12 column">
+                <div class="row clearfix">
+                    <div class="col-sm-3 column form-horizontal">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-6 control-label">
+                                客户名称</label>
+                            <div class="col-sm-6" style="margin: 0; padding: 0;">
+                                <input name="cstName" type="text" style="margin: 0; padding: 0;" class="form-control" id="inputEmail3" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 column form-horizontal">
+                        <div class="form-group ">
+                            <label for="inputEmail3" class="col-sm-6 control-label">
+                                客户经理</label>
+                            <div class="col-sm-6" style="margin: 0; padding: 0;">
+                                <input name="cstManage" type="text" style="margin: 0; padding: 0;" class="form-control" id="inputEmail3" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 column form-horizontal">
+                        <div class="form-group ">
+                            <label for="inputEmail3" class="col-sm-6 control-label">
+                                状态</label>
+                            <div class="col-sm-6" style="margin: 0; padding: 0;">
+                                <select name="loststatus" class="form-control" style="margin: 0; padding: 0;">
+                                    <option value="">——</option>
+                                    <option>预警</option>
+                                    <option>暂缓流失</option>
+                                    <option>已流失</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 column form-horizontal col-sm-offset-1">
+                        <button type="button" class="btn btn-default btn-block btn-primary selectBtn submitForm" onclick="submitFrom()">查询</button>
+                    </div>
+                </div>
+            </div>
+          </form>
+        </div>
+       <div class="row clearfix">
+           <div class="col-md-12 column">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        客户编号
+                    </th>
+                    <th>
+                        客户名称
+                    </th>
+                    <th>
+                        客户经理
+                    </th>
+                    <th>
+                        最后一次下单日期
+                    </th>
+                    <th>
+                        状态
+                    </th>
+                    <th>
+                        操作
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr>
+   
+                </tr>
+            </tbody>
+        </table>
+               		<div class="row clearfix">
+				<div class="col-md-4 column">
+				</div>
+				<div class="col-md-5 column">
+					<ul class="pagination">
+						<li>
+							<a rel="nofollow" href="#">上一页</a>
+						</li>
+						<li>
+							<a rel="nofollow" href="#">1</a>
+						</li>
+						<li>
+							<a rel="nofollow" href="#">2</a>
+						</li>
+						<li>
+							<a rel="nofollow" href="#">3</a>
+						</li>
+						<li>
+							<a rel="nofollow" href="#">4</a>
+						</li>
+						<li>
+							<a rel="nofollow" href="#">5</a>
+						</li>
+						<li>
+							<a rel="nofollow" href="#">下一页</a>
+						</li>
+					</ul>
+				</div>
+				<div class="col-md-3 column">
+				</div>
+			</div>
+    </div>
+    </div> 
+    </div>
+    <link rel="stylesheet" type="text/css" href="../resource/css/mainStyle.css" />
+    
+    <script src="../resource/js/pageList.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../resource/js/checkSelect.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+       
+        window.onload = function () {
+            getInfo();
+        }
+
+        function submitFrom() {
+            $('form').bootstrapValidator('validate');
+            var formState = $('form').data('bootstrapValidator').isValid()
+            if (formState) {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: "../../Control/clientManageControl/lostSelectSelectHandler.ashx",
+                    data: $("#lostForm").serialize(),
+                    async: false,
+                    error: function (request) {
+                        alert("服务器暂时无法响应，请稍后...");
+                    },
+                    success: function (data) {
+                        json = data;
+                        pageList(json, ListCount, "1");
+                        //viewTable(data);
+                    }
+                });
+            } 
+        }
+
+        function viewTable(data, pageListButton) {
+            var obj = JSON.parse(data);
+            $("#tableBody").html(""); //清空table
+            for (var i = 0; i < obj.length; i++) {
+                var strClass = "class=";
+                var nameClass;
+                switch (i % 5) {
+                    case 0:
+                        nameClass = "";
+                        break;
+                    case 1:
+                        nameClass = "active";
+                        break;
+                    case 2:
+                        nameClass = "success";
+                        break;
+                    case 3:
+                        nameClass = "warning";
+                        break;
+                    case 4:
+                        nameClass = "danger";
+                        break;
+                }
+                strClass += "\"" + nameClass + "\"";
+
+                  var data1 = obj[i].CstLost.LostLastdate.split(" ");
+                  obj[i].CstLost.LostLastdate = data1[0];
+
+                  var url2 = "?cstno=" + obj[i].CstLost.LostCstNo + "&&name=" + obj[i].Cst_name1 + "&&manege=" + obj[i].CstLost.LostCstManager + "&&date=" + obj[i].CstLost.LostLastdate + "&&measure=" + obj[i].CstLost.LostMeasures;
+                  var url1 = "clientManage-lose-stop.aspx" + url2;
+                  var aUrl = "<a data-urlname='暂缓流失' class='newUrlBtn stopBtn'  href='" +
+                  url1 + "' ><span class='glyphicon glyphicon-retweet' data-toggle='tooltip' data-placement='top' title='暂缓流失' style='font-size: 17px' aria-hidden='true'></span></a><a onclick='if(confirm(\"确定流失当前客户？\")) { return true;} else{return false;}' href='../../Control/clientManageControl/lostHandler.ashx?cstNo=" + obj[i].CstLost.LostCstNo + "' class='col-sm-offset-2'><span class='glyphicon glyphicon-check' data-toggle='tooltip' data-placement='top' title='确认流失'  style='font-size: 17px' aria-hidden='true'></span></a>";
+
+
+                  var s = obj[i].CstLost.LostLastdate;
+                  var sArray = new Array();
+                  sArray = s.split(" ");
+                  date = sArray[0];
+
+
+                  if (obj[i].CstLost.LostStatus == "已流失") {
+                      $("#tableBody").append(
+                "<tr " + strClass + "><td>" + obj[i].CstLost.LostCstNo + "</td><td>" + obj[i].Cst_name1 + "</td><td>" + obj[i].CstLost.LostCstManager + "</td><td>" + date + "</td><td>" + obj[i].CstLost.LostStatus + "</td><td></td></tr>");
+                  }
+                  else
+                  {
+                     $("#tableBody").append(
+                "<tr " + strClass + "><td>" + obj[i].CstLost.LostCstNo + "</td><td>" + obj[i].Cst_name1 + "</td><td>" + obj[i].CstLost.LostCstManager + "</td><td>" + date + "</td><td>" + obj[i].CstLost.LostStatus + "</td><td>" + aUrl + "</td></tr>");
+                  }
+             }
+             $(function () {
+                 $("[data-toggle='tooltip']").tooltip();
+
+                 //修改流失暂缓按钮的地址
+                 //$(".stopBtn").attr("href", "clientManage-lose-stop.aspx");
+             });
+             if (pageListButton) {
+                        pageListButton();
+                    }
+        }
+
+        function getInfo() {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../../Control/clientManageControl/lostSelectHandler.ashx",
+                async: false,
+                error: function (request) {
+                    alert("服务器暂时无法响应，请稍后...");
+                },
+                success: function (data) {
+                    json = data;
+                    pageList(json, ListCount, "1");
+                  //  viewTable(data);
+                }
+            });
+
+        }
+
+
+
+    </script>
+</body>
+
+</html>

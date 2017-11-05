@@ -1,0 +1,159 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>权限管理新增用户</title>
+    <style type="text/css">
+        .control-label
+        {
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        .modal-body
+        {
+            margin-right: 1% !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal -->
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+            <label class="control-label">
+                添加用户</label></h4>
+    </div>
+    <form id="formModel" class="form-horizontal" role="form">
+    <div class="modal-body row" id="rightMagnageModelBody">
+        <div class="col-sm-12 column">
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    编号</label>
+                <div class="col-sm-4">
+                    <p  id="PNum" class="form-control-static" style="color: red;"><%=Request["id"] %>
+                        </p>
+                    <input type="hidden" name="userNum" value="<%=Request["id"] %>"/>
+                </div>
+                <div class="inscop">
+                <label  for="inputEmail3" class="col-sm-2 control-label">
+                    姓名</label>
+                <div class="col-sm-4">
+                    <input name="userName" type="text" class="form-control" id="inputEmail3" />
+                </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    性别</label>
+                <div class="col-sm-4" >
+                    <select class="form-control" name="userGender">
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    权限</label>
+                <div class="col-sm-4">
+                    <select class="form-control" name="userRoles"  >
+                        <option value="管理员">管理员</option>
+                        <option value="销售经理">销售经理</option>
+                         <option value="客户经理">客户经理</option>
+                         <option value="高管">高管</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+            <div class="inscop">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    联系地址</label>
+                <div class="col-sm-4">
+                    <input name="userAddress" type="text" class="form-control" id="inputEmail3" />
+                </div>
+                </div>
+                <div class="inscop">
+                <label for="inputEmail3" class="col-sm-2 control-label">
+                    联系电话</label>
+                <div class="col-sm-4">
+                    <input  name="userTel" type="text" class="form-control" id="inputEmail3" />
+                </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label">
+                    详细描述</label>
+                <div class="col-sm-10">
+                    <textarea name="userRemark" class="form-control" rows="7" style="resize: none;"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+        </form>
+    <div class="modal-footer form-group" style="margin-bottom: 0;">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+            取消</button>
+        <button onclick="submitModel()" type="button" data-dismiss="modal" class="btn btn-primary submitForm">
+            添加</button>
+    </div>
+    
+    <script src="resource/js/checkModel.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+
+
+    function submitModel() {
+            $('form').bootstrapValidator('validate');
+            var formState = $('form').data('bootstrapValidator').isValid()
+            if (formState) {
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "../Control/rightManageControl/insertUser.ashx",
+                    data: $('#formModel').serialize(),
+                    async: false,
+                    error: function (requset) {
+                        alert("添加失败");
+                    },
+                    success: function (data) {
+
+                        if (data > 0) {
+                            alert("添加成功");
+                            $("#main")[0].contentWindow.submitFrom(); //获取子窗体中的方法
+
+                        } else {
+                            alert("添加失败");
+                        }
+                    }
+                });
+            }
+        }
+
+       
+
+
+
+        //function GetRequest() {
+        //    var url = location.search; //获取url中"?"符后的字串
+        //    var theRequest = new Object();
+        //    if (url.indexOf("?") != -1) {
+        //        var str = url.substr(1);
+        //        strs = str.split("&");
+        //        for (var i = 0; i < strs.length; i++) {
+        //            theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+        //        }
+        //    }
+        //    return theRequest;
+        //}
+        //$("#PNum").text("30")
+        //$(document).ready(function () {
+        //    var Request = new Object();
+        //    Request = GetRequest();
+        //    alert(Request['id']);
+            
+        //});
+    </script>
+</body>
+    
+</html>

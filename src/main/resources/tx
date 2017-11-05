@@ -1,0 +1,24 @@
+     <aop:config proxy-target-class="true" />
+     <!-- 事务管理器 
+     org.springframework.jdbc.datasource.DataSourceTransactionManager
+     -->
+	<bean id="transactionManager" class="org.mybatis.spring.transaction.SpringManagedTransaction">
+		<property name="dataSource" ref="ds" />
+	</bean>
+	<!-- 事务管理规则 -->
+	<tx:advice id="trAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="del*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="find*" propagation="NOT_SUPPORTED" />
+			<tx:method name="get*" propagation="NOT_SUPPORTED" />
+			<tx:method name="apply*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- 配置参与事务的类 -->
+	<aop:config>
+		<aop:pointcut id="serviceMethod" expression="execution(* org.fjh.service.*.*(..))" />
+		<aop:advisor pointcut-ref="serviceMethod" advice-ref="trAdvice" />
+	</aop:config>

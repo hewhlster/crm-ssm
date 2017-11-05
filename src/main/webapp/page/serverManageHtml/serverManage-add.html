@@ -1,0 +1,192 @@
+﻿
+
+<!DOCTYPE>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>客户管理-客户信息-新建</title>
+    <style type="text/css">
+        .form-group
+        {
+            margin-top: 4%;
+        }
+    </style>
+     <script src="../resource/js/bootstrap-LeadInto.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <!-- Modal -->
+    <form id="Newform" class="form-horizontal center-block" role="form">
+    <div class="col-md-12 column">
+        <div class="col-sm-2 column col-sm-offset-9">
+            <button  onclick="submitFrom()" type="submit" class="submitForm btn btn-default btn-block btn-primary" style="margin-top: 10%;
+                margin-bottom: 0;">
+                保存</button>
+        </div>
+    </div>
+    <div class="col-sm-9 column col-sm-offset-1">
+        <div class="form-group page-header " style="margin-top: 0;">
+            <h4>
+                <label class="col-sm-2 control-label" style="padding-left: 0;">
+                    服务编号:</label>
+                <div class="col-sm-3" style="padding-right: 0;">
+                    <p  id="SvcNo" class="form-control-static" style="color: red;"></p>
+                    <input id="SvcNo1" type="hidden"  name="SvcNo" value=""/>
+                </div>
+                <label class="col-sm-2 control-label" style="padding-left: 0;">
+                    创建人:</label>
+                <div class="col-sm-3" style="padding-right: 0;">
+                    <p class="form-control-static" style="color: red;">
+                        <%=Session["username"] %></p>
+                    <input type="hidden" name="userid" value="1" /> 
+                </div>
+            </h4>
+
+        </div>
+        <div class="form-group">
+            <div class="inscop">
+            <label for="inputEmail3" class="col-sm-2 control-label">
+                概要</label>
+            <div class="col-sm-4">
+                <input name="SvcSummary" type="text" class="form-control " id="inputEmail3" />
+            </div>
+                </div>
+            <div class="inscop">
+            <label for="inputEmail3" class="col-sm-2 control-label">
+                创建时间</label>
+            <div class="col-sm-4">
+                <input name="SvcCreateDate" type="date" class="form-control " id="SvcCreateDate" />
+            </div>
+                </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">
+                客户名称</label>
+            <div class="col-sm-4">
+                <select id="selectioncstname" name="SvcCstNo" class="form-control">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">
+                服务类型</label>
+            <div class="col-sm-4">
+                <select name="SvcType" class="form-control">
+                    <option>咨询</option>
+                    <option>投诉</option>
+                    <option>建议</option>
+                </select>
+            </div>
+            <label for="inputPassword3" class="col-sm-2 control-label">
+                状态</label>
+            <div class="col-sm-4">
+                <select name="SvcStatus"  class="form-control">
+                    <option>待分配</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group inscop">
+            <label for="inputEmail3" class="col-sm-2 control-label">
+                详细描述</label>
+            <div class="col-sm-10">
+                <textarea name="SvcDetails" class="form-control" rows="9" style="resize: none;"></textarea>
+            </div>
+        </div>
+    </div>
+    </form>
+    <script src="../resource/js/checkPage.js" type="text/javascript" charset="utf-8"></script>
+   
+     <script type="text/javascript" charset="utf-8">
+        window.onload = function () {
+            getInfo();
+            getSvcNo();
+            var maxDate = getNowFormatDate();
+
+            $("#SvcCreateDate").attr("max", maxDate);
+        }
+        //获取当前时间，格式YYYY-MM-DD
+        function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = year + seperator1 + month + seperator1 + strDate;
+            return currentdate;
+        }
+        function getSvcNo() {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../../Control/serverManageControl/NewgetSvcNo.ashx",
+                async: false,
+                error: function (request) {
+                    alert("无响应");
+                },
+                success: function (data) {
+                    
+                    $("#SvcNo").text(data);
+                    $("#SvcNo1").attr("value", data);
+                }
+            });
+        }
+      
+        function viewSelection(data)
+        {
+            var obj = JSON.parse(data);
+            $("#selectioncstname").html("");
+          
+            for (var i = 0; i < obj.length; i++) {
+                $("#selectioncstname").append(
+                         "<option  value='" + obj[i].CstNo + "'>" + obj[i].CstName + "</option>"
+                    )
+            }
+        }
+
+        function getInfo() {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "../../Control/serverManageControl/NewServerSelection.ashx",
+                async: false,
+                error: function (request) {
+                    alert("服务器暂时无法响应，请稍后...");
+                },
+                success: function (data) {
+                    viewSelection(data);
+                }
+            });
+        }
+
+        function submitFrom() {
+            $('form').bootstrapValidator('validate');
+            var formState = $('form').data('bootstrapValidator').isValid()
+            if (formState) {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: "../../Control/serverManageControl/NewServer.ashx",
+                    data: $("#Newform").serialize(),
+                    async: false,
+                    error: function (request) {
+                        alert("服务器暂时无法响应，请稍后...");
+                    },
+                    success: function (data) {
+                        alert("新建成功!");
+                        window.history.back(-1);
+
+                    }
+                });
+            }
+        }
+
+
+   </script>
+</body>
+</html>
